@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --text: #1a1a1a;
+    --text-light: #666666;
+    --accent: 59, 130, 246;
+    --border: #e5e7eb;
+  }
+
+  .dark {
+    --background: #1a1a1a;
+    --text: #ffffff;
+    --text-light: #a3a3a3;
+    --accent: 96, 165, 250;
+    --border: #404040;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-background text-text min-h-screen;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-white hover:bg-opacity-90;
+  }
+
+  .card {
+    @apply bg-background border border-border rounded-xl p-6 transition-all hover:shadow-lg;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+} 

@@ -1,0 +1,84 @@
+---
+interface Props {
+  placeholder?: string;
+}
+
+const { placeholder = "Buscar artículos..." } = Astro.props;
+---
+
+<div class="relative w-full max-w-2xl mx-auto mb-8">
+  <div class="relative">
+    <input
+      type="search"
+      id="search-input"
+      class="w-full px-4 py-3 pl-12 text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg"
+      placeholder={placeholder}
+    />
+    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+      <svg
+        class="w-5 h-5 text-gray-500 dark:text-gray-400 transition-colors duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const articles = document.querySelectorAll('article');
+
+  searchInput?.addEventListener('input', (e) => {
+    const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+
+    articles.forEach(article => {
+      const title = article.querySelector('h2')?.textContent?.toLowerCase() || '';
+      const description = article.querySelector('p')?.textContent?.toLowerCase() || '';
+      const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent?.toLowerCase());
+      
+      const matches = title.includes(searchTerm) || 
+                     description.includes(searchTerm) || 
+                     tags.some(tag => tag.includes(searchTerm));
+
+      // Aplicar animación de fade y slide
+      if (matches) {
+        article.style.display = 'block';
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          article.style.opacity = '1';
+          article.style.transform = 'translateY(0)';
+        }, 50);
+      } else {
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          article.style.display = 'none';
+        }, 300);
+      }
+    });
+  });
+</script>
+
+<style>
+  input[type="search"] {
+    transition: all 0.3s ease;
+  }
+
+  input[type="search"]:focus {
+    transform: translateY(-2px);
+  }
+
+  article {
+    transition: all 0.3s ease;
+  }
+</style> 

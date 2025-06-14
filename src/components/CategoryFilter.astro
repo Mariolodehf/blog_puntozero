@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const categories = Array.from(new Set(posts.flatMap(post => post.data.tags || [])));
+---
+
+<div class="flex flex-wrap justify-center gap-2 mb-8">
+  <button
+    class="category-btn active px-4 py-2 rounded-full bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95"
+    data-category="all"
+    type="button"
+    style="opacity:1; pointer-events:auto;"
+  >
+    Todos
+  </button>
+  {categories.map((category) => (
+    <button
+      class="category-btn px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+      data-category={category}
+      type="button"
+    >
+      {category}
+    </button>
+  ))}
+</div>
+
+<script>
+  const categoryButtons = document.querySelectorAll('.category-btn');
+  const articles = document.querySelectorAll('article');
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remover clase active de todos los botones
+      categoryButtons.forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'font-bold');
+        btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-200', 'font-semibold');
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      });
+
+      // Agregar clase active al botón clickeado
+      button.classList.add('active', 'bg-blue-600', 'text-white', 'font-bold');
+      button.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-200', 'font-semibold');
+      button.style.opacity = '1';
+      button.style.pointerEvents = 'auto';
+
+      const category = button.getAttribute('data-category');
+
+      articles.forEach(article => {
+        const articleTags = article.getAttribute('data-tags')?.split(',') || [];
+        const shouldShow = category === 'all' || articleTags.includes(category);
+        
+        // Aplicar animación de fade y slide
+        if (shouldShow) {
+          article.style.display = 'block';
+          article.style.opacity = '0';
+          article.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            article.style.opacity = '1';
+            article.style.transform = 'translateY(0)';
+          }, 50);
+        } else {
+          article.style.opacity = '0';
+          article.style.transform = 'translateY(-20px)';
+          setTimeout(() => {
+            article.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .category-btn {
+    transition: all 0.3s ease;
+  }
+  .category-btn.active {
+    background: #2563eb; /* blue-600 */
+    color: #fff;
+    font-weight: 700;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+  }
+  article {
+    transition: all 0.3s ease;
+  }
+</style> 

@@ -1,0 +1,152 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+const showEllipsis = totalPages > 7;
+const showStartEllipsis = currentPage > 4;
+const showEndEllipsis = currentPage < totalPages - 3;
+
+const getVisiblePages = () => {
+  if (!showEllipsis) return pages;
+  
+  if (currentPage <= 4) {
+    return [...pages.slice(0, 5), '...', totalPages];
+  }
+  
+  if (currentPage >= totalPages - 3) {
+    return [1, '...', ...pages.slice(-5)];
+  }
+  
+  return [
+    1,
+    '...',
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    '...',
+    totalPages
+  ];
+};
+---
+
+<nav class="flex justify-center items-center space-x-2 mt-8" aria-label="Pagination">
+  {currentPage > 1 && (
+    <a
+      href={`${baseUrl}${currentPage === 2 ? '' : `/${currentPage - 1}`}`}
+      class="px-3 py-2 rounded-lg text-text-light hover:text-accent transition-colors"
+      aria-label="Previous page"
+    >
+      ←
+    </a>
+  )}
+
+  {getVisiblePages().map((page) => (
+    page === '...' ? (
+      <span class="px-4 py-2 text-text-light">...</span>
+    ) : (
+      <a
+        href={`${baseUrl}${page === 1 ? '' : `/${page}`}`}
+        class:list={[
+          'px-4 py-2 rounded-lg transition-colors',
+          {
+            'bg-accent text-white': page === currentPage,
+            'text-text-light hover:text-accent': page !== currentPage
+          }
+        ]}
+        aria-current={page === currentPage ? 'page' : undefined}
+      >
+        {page}
+      </a>
+    )
+  ))}
+
+  {currentPage < totalPages && (
+    <a
+      href={`${baseUrl}/${currentPage + 1}`}
+      class="px-3 py-2 rounded-lg text-text-light hover:text-accent transition-colors"
+      aria-label="Next page"
+    >
+      →
+    </a>
+  )}
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0;
+  }
+
+  .pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .pagination-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .pagination-link:hover {
+    background: rgba(var(--accent), 0.1);
+    border-color: rgb(var(--accent));
+    transform: translateY(-2px);
+  }
+
+  .pagination-link.active {
+    background: rgb(var(--accent));
+    border-color: rgb(var(--accent));
+    color: white;
+  }
+
+  .pagination-ellipsis {
+    color: var(--text-light);
+    padding: 0 0.5rem;
+  }
+
+  .pagination-link.prev,
+  .pagination-link.next {
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .pagination {
+      flex-wrap: wrap;
+    }
+
+    .pagination-numbers {
+      order: 2;
+      width: 100%;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .pagination-link.prev {
+      order: 1;
+    }
+
+    .pagination-link.next {
+      order: 3;
+    }
+  }
+</style> 

@@ -1,0 +1,160 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+const { currentPage, totalPages, hasMore } = Astro.props;
+---
+
+<div class="flex flex-col items-center gap-4 mt-12">
+  <!-- Botón de cargar más -->
+  <button
+    id="load-more"
+    class="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+    data-page={currentPage}
+    disabled={!hasMore}
+  >
+    <span class="flex items-center">
+      <svg
+        class="w-5 h-5 mr-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+      {hasMore ? 'Cargar más artículos' : 'No hay más artículos'}
+    </span>
+  </button>
+
+  <!-- Indicador de progreso -->
+  {hasMore && (
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Página {currentPage} de {totalPages}
+    </p>
+  )}
+
+  <!-- Loading spinner (inicialmente oculto) -->
+  <div
+    id="loading-spinner"
+    class="hidden w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"
+  ></div>
+</div>
+
+<script>
+  const POSTS_PER_PAGE = 6;
+  let isLoading = false;
+
+  // Función para cargar más posts
+  async function loadMorePosts() {
+    if (isLoading) return;
+    
+    const loadMoreBtn = document.getElementById('load-more');
+    const spinner = document.getElementById('loading-spinner');
+    const currentPage = parseInt(loadMoreBtn?.dataset.page || '1');
+    
+    try {
+      isLoading = true;
+      loadMoreBtn?.classList.add('opacity-50', 'cursor-not-allowed');
+      spinner?.classList.remove('hidden');
+
+      // Simular carga de datos (reemplazar con tu lógica real)
+      const response = await fetch(`/api/posts?page=${currentPage + 1}&limit=${POSTS_PER_PAGE}`);
+      const data = await response.json();
+
+      if (data.posts.length > 0) {
+        // Actualizar el grid de posts
+        const postsGrid = document.querySelector('.posts-grid');
+        data.posts.forEach((post: any) => {
+          const article = createArticleElement(post);
+          postsGrid?.appendChild(article);
+        });
+
+        // Actualizar el botón
+        loadMoreBtn?.setAttribute('data-page', (currentPage + 1).toString());
+        if (currentPage + 1 >= data.totalPages) {
+          loadMoreBtn?.setAttribute('disabled', 'true');
+          loadMoreBtn?.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      } else {
+        loadMoreBtn?.setAttribute('disabled', 'true');
+        loadMoreBtn?.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    } catch (error) {
+      console.error('Error al cargar más posts:', error);
+    } finally {
+      isLoading = false;
+      loadMoreBtn?.classList.remove('opacity-50', 'cursor-not-allowed');
+      spinner?.classList.add('hidden');
+    }
+  }
+
+  // Función para crear elementos de artículo
+  function createArticleElement(post: any) {
+    const article = document.createElement('article');
+    article.className = 'group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transform hover:-translate-y-1';
+    article.setAttribute('data-tags', post.tags.join(','));
+    
+    article.innerHTML = `
+      <a href="/blog/${post.slug}" class="block">
+        <div class="p-6">
+          <div class="space-y-3">
+            <time datetime="${post.pubDate}" class="text-sm text-gray-500 dark:text-gray-400">
+              ${new Date(post.pubDate).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-all duration-300 line-clamp-2">
+              ${post.title}
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 line-clamp-3">
+              ${post.description}
+            </p>
+            ${post.tags.length > 0 ? `
+              <div class="flex flex-wrap gap-2 pt-2">
+                ${post.tags.map((tag: string) => `
+                  <span class="tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 transition-all duration-200 hover:scale-105 hover:bg-primary-100 dark:hover:bg-primary-900">
+                    ${tag}
+                  </span>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </a>
+    `;
+    
+    return article;
+  }
+
+  // Event listener para el botón de cargar más
+  document.getElementById('load-more')?.addEventListener('click', loadMorePosts);
+
+  // Preparación para infinite scroll (comentado por ahora)
+  /*
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !isLoading) {
+        loadMorePosts();
+      }
+    });
+  }, {
+    rootMargin: '100px'
+  });
+
+  const loadMoreBtn = document.getElementById('load-more');
+  if (loadMoreBtn) {
+    observer.observe(loadMoreBtn);
+  }
+  */
+</script> 
