@@ -31,8 +31,8 @@ export async function getStaticPaths() {
   });
 }
 
-const { Content } = await Astro.props;
 const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await post.render();
 const { title, description, pubDate, tags } = post.data;
 ---
 
