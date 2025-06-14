@@ -3,8 +3,6 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { slugify } from '../../utils/slugify';
 
-export const prerender = true;
-
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
