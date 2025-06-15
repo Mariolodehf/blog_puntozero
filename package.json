@@ -2,22 +2,30 @@
   "name": "puntozero",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=22.16.0"
+  },
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "npx astro dev",
+    "start": "npx astro dev",
+    "build": "npx astro build",
+    "preview": "npx astro preview",
+    "astro": "npx astro"
   },
   "dependencies": {
     "@astrojs/vercel": "^8.0.4",
+    "@astrojs/sitemap": "^3.0.0",
     "astro": "^5.9.3",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "@vercel/analytics": "^1.1.1"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^5.1.0",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1"
+  },
+  "overrides": {
+    "sharp": "0.32.6"
   }
 }
