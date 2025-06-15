@@ -1,6 +1,0 @@
-{
-	"runtime": "nodejs20.x",
-	"handler": "home/mariolodev/proyectos/puntozero/dist/entry.mjs",
-	"launcherType": "Nodejs",
-	"supportsResponseStreaming": true
-}
