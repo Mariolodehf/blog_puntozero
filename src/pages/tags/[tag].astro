@@ -3,11 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { slugify } from '../../utils/slugify';
 import Pagination from '../../components/Pagination.astro';
+import { POSTS_PER_PAGE, SITE_TITLE } from '../../utils/constants';
 
 export const prerender = true;
-
-const POSTS_PER_PAGE = 6;
-
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -39,8 +37,8 @@ const paginatedPosts = posts.slice(startIndex, endIndex);
 ---
 
 <Layout
-	title={`Posts con la etiqueta "${tag}" | Mi Blog`}
-	description={`Artículos sobre ${tag} en mi blog. Encuentra todo el contenido relacionado con ${tag}.`}
+	title={`Posts con la etiqueta "${tag}" | ${SITE_TITLE}`}
+	description={`Artículos sobre ${tag} en ${SITE_TITLE}. Encuentra todo el contenido relacionado con ${tag}.`}
 >
 	<section class="tag-header">
 		<h1>Posts con la etiqueta: {tag}</h1>
