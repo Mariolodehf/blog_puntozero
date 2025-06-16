@@ -1,13 +1,19 @@
 ---
 title: "Mi Primer Post"
-description: "Este es un post de prueba para verificar que todo funcione correctamente"
+description: "Una breve reflexión para iniciar este espacio personal"
 pubDate: 2025-06-16
 tags: ["reflexiones", "vida"]
 ---
 
 # Mi Primer Post
 
-Este es un post de prueba para verificar que todo funcione correctamente.
+Este post marca el inicio de este espacio personal. Aquí compartiré mis primeras reflexiones y pensamientos sobre la vida.
+
+## Un comienzo
+
+- Explorando nuevas ideas
+- Compartiendo vivencias
+- Abriendo un diálogo
 
 ## Características a probar
 
