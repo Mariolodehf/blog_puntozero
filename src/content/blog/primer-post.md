@@ -1,8 +1,8 @@
 ---
 title: "Mi Primer Post"
 description: "Este es un post de prueba para verificar que todo funcione correctamente"
-pubDate: 2024-03-14
-tags: ["prueba", "astro"]
+pubDate: 2025-06-16
+tags: ["reflexiones", "vida"]
 ---
 
 # Mi Primer Post

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import SEO from '../components/SEO.astro';
+import MobileSearchOverlay from '../components/MobileSearchOverlay.astro';
 
 interface Props {
 	title: string;
@@ -27,9 +28,9 @@ const { title, description, image, type, pubDate, tags } = Astro.props;
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<SEO title={title} description={description} image={image} />
+		<SEO title={title} description={description ?? ''} image={image} />
 	</head>
-	<body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+	<body class="min-h-screen transition-colors duration-200">
 		<Header />
 		<main class="flex-grow container mx-auto px-4 py-8">
 			<slot />
@@ -39,6 +40,7 @@ const { title, description, image, type, pubDate, tags } = Astro.props;
 				<p>&copy; {new Date().getFullYear()} PuntoZero. Todos los derechos reservados.</p>
 			</div>
 		</footer>
+		<MobileSearchOverlay />
 	</body>
 </html>
 
@@ -47,8 +49,11 @@ const { title, description, image, type, pubDate, tags } = Astro.props;
 	function initTheme() {
 		// Verificar preferencia guardada
 		const theme = (() => {
-			if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-				return localStorage.getItem('theme');
+			if (typeof localStorage !== 'undefined') {
+				const storedTheme = localStorage.getItem('theme');
+				if (storedTheme) {
+					return storedTheme;
+				}
 			}
 			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
 				return 'dark';
@@ -72,7 +77,7 @@ const { title, description, image, type, pubDate, tags } = Astro.props;
 
 	// Escuchar cambios en las preferencias del sistema
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-		if (!localStorage.getItem('theme')) {
+		if (localStorage.getItem('theme') === null) {
 			if (e.matches) {
 				document.documentElement.classList.add('dark');
 			} else {

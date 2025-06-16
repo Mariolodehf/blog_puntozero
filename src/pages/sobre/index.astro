@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SITE_TITLE } from '../../utils/constants';
+---
+
+<Layout 
+  title={`Sobre ${SITE_TITLE}`} 
+  description="Conoce más sobre el proyecto PuntoZero, un espacio para compartir ideas, aprendizajes y experiencias relacionadas con desarrollo web, programación y tecnología."
+>
+  <section class="about">
+    <h1>Sobre el proyecto</h1>
+    <p>PuntoZero nace con la intención de construir un espacio para compartir ideas, aprendizajes y experiencias relacionadas con desarrollo web, programación y tecnología.</p>
+
+    <p>Este proyecto está desarrollado con <strong>Astro</strong>, pensado para ser rápido, accesible y fácil de mantener, permitiendo a la comunidad participar y crecer juntos.</p>
+
+    <p>Gracias por ser parte de este viaje.</p>
+  </section>
+</Layout>
+
+<style>
+  .about {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .about h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    color: var(--text);
+  }
+
+  .about p {
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+  }
+
+  .about strong {
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    .about {
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .about h1 {
+      font-size: 2rem;
+    }
+  }
+</style> 

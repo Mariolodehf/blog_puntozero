@@ -1,8 +1,8 @@
 ---
 title: "Creando un Blog Moderno con Astro"
 description: "Una guía paso a paso para crear un blog rápido y eficiente usando Astro"
-pubDate: 2024-03-14
-tags: ["astro", "tutorial", "blog", "desarrollo-web"]
+pubDate: 2025-06-16
+tags: ["historias", "experiencias"]
 ---
 
 # Creando un Blog Moderno con Astro

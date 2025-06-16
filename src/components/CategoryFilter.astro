@@ -2,87 +2,151 @@
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
-const categories = Array.from(new Set(posts.flatMap(post => post.data.tags || [])));
+const allCategories = [
+  'reflexiones',
+  'historias',
+  'vida',
+  'aprendizajes',
+  'crecimiento',
+  'experiencias'
+];
+
+// Filtrar solo las categorías que tienen posts
+const categories = allCategories.filter(category => 
+  posts.some(post => post.data.tags?.includes(category))
+);
+
+const visibleCategories = categories.slice(0, 4);
+const hiddenCategories = categories.slice(4);
 ---
 
 <div class="flex flex-wrap justify-center gap-2 mb-8">
   <button
-    class="category-btn active px-4 py-2 rounded-full bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95"
+    class="category-btn active px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-[var(--accent-light)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95"
     data-category="all"
     type="button"
     style="opacity:1; pointer-events:auto;"
   >
-    Todos
+    Ver todas las historias
   </button>
-  {categories.map((category) => (
+  {visibleCategories.map((category) => (
     <button
-      class="category-btn px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+      class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
       data-category={category}
       type="button"
     >
-      {category}
+      {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
     </button>
   ))}
+  {hiddenCategories.length > 0 && (
+    <button
+      id="show-more-categories"
+      class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+      type="button"
+    >
+      Ver más etiquetas
+    </button>
+  )}
+  <div id="hidden-categories" class="hidden w-full flex-wrap justify-center gap-2 mt-2">
+    {hiddenCategories.map((category) => (
+      <button
+        class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+        data-category={category}
+        type="button"
+      >
+        {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+      </button>
+    ))}
+  </div>
 </div>
 
 <script>
-  const categoryButtons = document.querySelectorAll('.category-btn');
-  const articles = document.querySelectorAll('article');
+  const categoryButtons = document.querySelectorAll<HTMLButtonElement>('.category-btn');
+  const articles = document.querySelectorAll<HTMLElement>('article');
+  const showMoreButton = document.getElementById('show-more-categories') as HTMLButtonElement | null;
+  const hiddenCategories = document.getElementById('hidden-categories') as HTMLDivElement | null;
 
-  categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remover clase active de todos los botones
-      categoryButtons.forEach(btn => {
-        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'font-bold');
-        btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-200', 'font-semibold');
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-      });
-
-      // Agregar clase active al botón clickeado
-      button.classList.add('active', 'bg-blue-600', 'text-white', 'font-bold');
-      button.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-200', 'font-semibold');
-      button.style.opacity = '1';
-      button.style.pointerEvents = 'auto';
-
-      const category = button.getAttribute('data-category');
-
-      articles.forEach(article => {
-        const articleTags = article.getAttribute('data-tags')?.split(',') || [];
-        const shouldShow = category === 'all' || articleTags.includes(category);
-        
-        // Aplicar animación de fade y slide
-        if (shouldShow) {
-          article.style.display = 'block';
-          article.style.opacity = '0';
-          article.style.transform = 'translateY(20px)';
-          setTimeout(() => {
-            article.style.opacity = '1';
-            article.style.transform = 'translateY(0)';
-          }, 50);
-        } else {
-          article.style.opacity = '0';
-          article.style.transform = 'translateY(-20px)';
-          setTimeout(() => {
-            article.style.display = 'none';
-          }, 300);
-        }
-      });
+  // Función para manejar el filtrado
+  function filterArticles(category: string) {
+    articles.forEach(article => {
+      const articleTags = article.getAttribute('data-tags')?.split(',') || [];
+      const shouldShow = category === 'all' || articleTags.includes(category);
+      
+      if (shouldShow) {
+        article.style.display = 'block';
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          article.style.opacity = '1';
+          article.style.transform = 'translateY(0)';
+        }, 50);
+      } else {
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          article.style.display = 'none';
+        }, 300);
+      }
     });
+  }
+
+  // Función para obtener el valor de una variable CSS
+  function getCssVar(name: string) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // Manejar clic en botones de categoría
+  categoryButtons.forEach(button => {
+    if (button.id !== 'show-more-categories') {
+      button.addEventListener('click', () => {
+        // Remover clase active de todos los botones y aplicar estilos inactivos
+        categoryButtons.forEach(btn => {
+          if (btn.id !== 'show-more-categories') {
+            btn.classList.remove('active');
+            (btn as HTMLElement).style.background = 'transparent';
+            (btn as HTMLElement).style.color = getCssVar('--accent');
+            (btn as HTMLElement).style.border = `1px solid ${getCssVar('--accent')}`;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          }
+        });
+
+        // Agregar clase active al botón clickeado y aplicar estilos activos
+        button.classList.add('active');
+        (button as HTMLElement).style.background = getCssVar('--accent');
+        (button as HTMLElement).style.color = '#fff';
+        (button as HTMLElement).style.border = 'none';
+        button.style.opacity = '1';
+        button.style.pointerEvents = 'auto';
+
+        const category = button.getAttribute('data-category') || 'all';
+        filterArticles(category);
+      });
+    }
+  });
+
+  // Manejar clic en "Ver más etiquetas"
+  showMoreButton?.addEventListener('click', () => {
+    hiddenCategories?.classList.toggle('hidden');
+    if (showMoreButton && hiddenCategories) {
+      showMoreButton.textContent = hiddenCategories.classList.contains('hidden') 
+        ? 'Ver más etiquetas' 
+        : 'Ver menos etiquetas';
+    }
   });
 </script>
 
 <style>
   .category-btn {
     transition: all 0.3s ease;
+    padding: 0.4rem 0.8rem;
   }
-  .category-btn.active {
-    background: #2563eb; /* blue-600 */
-    color: #fff;
-    font-weight: 700;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+  /* Eliminamos .category-btn.active de aquí ya que se maneja por JS */
+  /* Asegurar que los botones inactivos también usen los nuevos colores (si JS no los sobrescribe) */
+  .category-btn:not(.active) {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
   }
   article {
     transition: all 0.3s ease;

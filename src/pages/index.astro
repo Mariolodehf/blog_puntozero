@@ -8,17 +8,38 @@ import LoadMore from '../components/LoadMore.astro';
 import NoPostsFound from '../components/NoPostsFound.astro';
 
 const POSTS_PER_PAGE = 6;
-const posts = await getCollection('blog');
-const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const initialPosts = sortedPosts.slice(0, POSTS_PER_PAGE);
+const allPosts = await getCollection('blog');
+
+// Definir el orden deseado de los posts por su slug
+const desiredOrderSlugs = [
+	'hello-world',
+	'primer-post',
+	'creando-un-blog-moderno-con-astro',
+];
+
+// Filtrar y ordenar los posts según el orden deseado
+const sortedPosts = desiredOrderSlugs
+	.map(slug => allPosts.find(post => post.slug === slug))
+	.filter(Boolean) as typeof allPosts;
+
+// Si hay más posts aparte de los especificados, añadirlos al final ordenados por fecha
+const otherPosts = allPosts.filter(post => !desiredOrderSlugs.includes(post.slug))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const posts = [...sortedPosts, ...otherPosts];
+
+const initialPosts = posts.slice(0, POSTS_PER_PAGE);
 const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 ---
 
 <Layout title="PuntoZero - Blog de Tecnología y Desarrollo">
+	<Fragment slot="description">
+		Historias personales, reflexiones y aprendizajes sobre la vida.
+	</Fragment>
 	<!-- Hero Section -->
 	<section class="text-center py-16">
 		<p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-			Tu blog de desarrollo web, programación y tecnología.
+			Historias personales, reflexiones y aprendizajes sobre la vida.
 		</p>
 	</section>
 

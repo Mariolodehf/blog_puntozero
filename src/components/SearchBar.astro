@@ -6,7 +6,7 @@ interface Props {
 const { placeholder = "Buscar artículos..." } = Astro.props;
 ---
 
-<div class="relative w-full max-w-2xl mx-auto mb-8">
+<div class="relative w-full max-w-2xl mx-auto mb-8 hidden md:block">
   <div class="relative">
     <input
       type="search"
@@ -47,7 +47,7 @@ const { placeholder = "Buscar artículos..." } = Astro.props;
       
       const matches = title.includes(searchTerm) || 
                      description.includes(searchTerm) || 
-                     tags.some(tag => tag.includes(searchTerm));
+                     tags.some(tag => tag && tag.includes(searchTerm));
 
       // Aplicar animación de fade y slide
       if (matches) {
