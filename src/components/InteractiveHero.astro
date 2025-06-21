@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+
+// 1. Obtenemos todos los posts
+const allPosts = await getCollection('blog');
+
+// 2. Filtramos para asegurarnos de que tengan los datos necesarios y tomamos 4
+const featuredPosts = allPosts
+  .filter(post => post.data.title && post.data.description && post.slug)
+  .slice(0, 4); 
+---
+
+<div id="webgl-container" class="fixed top-0 left-0 w-full h-full z-0">
+  <canvas id="webgl-canvas"></canvas>
+</div>
+
+<div id="scroll-container" class="relative z-10">
+  
+  <!-- Vista Inicial -->
+  <section id="initial-view" class="h-screen flex items-center justify-center text-center">
+    <div class="animate-float texto-principal fade-out">
+      <h1 class="text-5xl md:text-7xl font-bold text-white">PuntoZero</h1>
+      <p class="text-xl text-white animate-bounce">Desliza para empezar el viaje</p>
+    </div>
+  </section>
+
+  <!-- Mensaje de Bienvenida -->
+  <section id="welcome-card-section" class="h-screen flex items-center">
+    <div class="container mx-auto px-4">
+      <div id="welcome-card" class="bienvenido fade-behind w-full md:w-2/3 p-8 rounded-lg bg-black/30 backdrop-blur-md mx-auto text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Bienvenido</h2>
+        <p class="text-xl text-white/80">
+          Aquí te perderás para encontrarme, historia de luz y oscuridad, como debería ser, una historia que aún no termina.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Siguientes Paradas: Artículos del Blog -->
+  {featuredPosts.map((post, index) => (
+    <section class="h-screen flex items-center blog-post-section">
+      <div class="container mx-auto px-4">
+        <div class="w-full md:w-1/2 p-8 rounded-lg bg-black/30 backdrop-blur-md mx-auto text-center">
+          <h2 class="text-3xl font-bold text-white mb-4">{post.data.title}</h2>
+          <p class="text-white/80 mb-6">{post.data.description}</p>
+          <a href={`/blog/${post.slug}`} class="inline-block bg-white text-black font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors">
+            Leer más
+          </a>
+        </div>
+      </div>
+    </section>
+  ))}
+  
+  <!-- Parada Final -->
+  <section class="h-screen flex items-center justify-center text-center text-white">
+    <div>
+      <h2 class="text-4xl font-bold">Gracias por tu visita</h2>
+    </div>
+  </section>
+</div>
+
+<script src="../scripts/interactive-hero.js"></script> 

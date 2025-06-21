@@ -121,7 +121,7 @@ const { currentPage, totalPages, hasMore } = Astro.props;
               ${post.description}
             </p>
             ${post.tags.length > 0 ? `
-              <div class="flex flex-wrap gap-2 pt-2">
+              <div class="hidden md:flex flex-wrap gap-2 pt-2">
                 ${post.tags.map((tag: string) => `
                   <span class="tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 transition-all duration-200 hover:scale-105 hover:bg-primary-100 dark:hover:bg-primary-900">
                     ${tag}

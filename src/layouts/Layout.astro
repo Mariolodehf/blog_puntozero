@@ -11,9 +11,10 @@ interface Props {
 	type?: 'website' | 'article';
 	pubDate?: Date;
 	tags?: string[];
+	fullWidth?: boolean;
 }
 
-const { title, description, image, type, pubDate, tags } = Astro.props;
+const { title, description, image, type, pubDate, tags, fullWidth = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -32,9 +33,13 @@ const { title, description, image, type, pubDate, tags } = Astro.props;
 	</head>
 	<body class="min-h-screen transition-colors duration-200">
 		<Header />
-		<main class="flex-grow container mx-auto px-4 py-8">
+		{fullWidth ? (
 			<slot />
-		</main>
+		) : (
+			<main class="flex-grow container mx-auto px-4 py-8">
+				<slot />
+			</main>
+		)}
 		<footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 mt-16">
 			<div class="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400">
 				<p>&copy; {new Date().getFullYear()} PuntoZero. Todos los derechos reservados.</p>

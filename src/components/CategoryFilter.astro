@@ -20,35 +20,17 @@ const visibleCategories = categories.slice(0, 4);
 const hiddenCategories = categories.slice(4);
 ---
 
-<div class="flex flex-wrap justify-center gap-2 mb-8">
-  <button
-    class="category-btn active px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-[var(--accent-light)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95"
-    data-category="all"
-    type="button"
-    style="opacity:1; pointer-events:auto;"
-  >
-    Ver todas las historias
-  </button>
-  {visibleCategories.map((category) => (
+<div class="hidden md:block">
+  <div class="flex flex-wrap justify-center gap-2 mb-8">
     <button
-      class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-      data-category={category}
+      class="category-btn active px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-[var(--accent-light)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95"
+      data-category="all"
       type="button"
+      style="opacity:1; pointer-events:auto;"
     >
-      {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+      Ver todas las historias
     </button>
-  ))}
-  {hiddenCategories.length > 0 && (
-    <button
-      id="show-more-categories"
-      class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-      type="button"
-    >
-      Ver más etiquetas
-    </button>
-  )}
-  <div id="hidden-categories" class="hidden w-full flex-wrap justify-center gap-2 mt-2">
-    {hiddenCategories.map((category) => (
+    {visibleCategories.map((category) => (
       <button
         class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
         data-category={category}
@@ -57,6 +39,26 @@ const hiddenCategories = categories.slice(4);
         {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
       </button>
     ))}
+    {hiddenCategories.length > 0 && (
+      <button
+        id="show-more-categories"
+        class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+        type="button"
+      >
+        Ver más etiquetas
+      </button>
+    )}
+    <div id="hidden-categories" class="hidden w-full flex-wrap justify-center gap-2 mt-2">
+      {hiddenCategories.map((category) => (
+        <button
+          class="category-btn px-4 py-2 rounded-lg bg-transparent text-[var(--accent)] border border-[var(--accent)] font-semibold hover:bg-[rgba(var(--accent),0.05)] focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          data-category={category}
+          type="button"
+        >
+          {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+        </button>
+      ))}
+    </div>
   </div>
 </div>
 

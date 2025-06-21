@@ -31,6 +31,8 @@
     @apply bg-background text-text min-h-screen;
     font-family: 'Inter', sans-serif;
     font-size: 1.1rem;
+    background-color: #d1e1f7;
+    background-image: linear-gradient(to bottom, #d1e1f7 0%, #ffffff 100%);
   }
 
   h1 {
@@ -75,5 +77,51 @@
 
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1.5s ease-out forwards;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@layer utilities {
+  .fade-behind {
+    @apply opacity-0 blur-md scale-105 transition-all duration-1000 ease-in-out;
+  }
+  .fade-behind-active {
+    @apply opacity-100 blur-0 scale-100;
+  }
+  .fade-out {
+    @apply opacity-100 transition-opacity duration-1000 ease-in-out;
+  }
+  .fade-out-active {
+    @apply opacity-0;
   }
 } 
