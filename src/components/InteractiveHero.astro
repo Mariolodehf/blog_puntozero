@@ -7,56 +7,223 @@ const allPosts = await getCollection('blog');
 // 2. Filtramos para asegurarnos de que tengan los datos necesarios y tomamos 4
 const featuredPosts = allPosts
   .filter(post => post.data.title && post.data.description && post.slug)
+  .filter(post => post.slug !== 'creando-blog-con-astro') // Excluir el post del viaje de crear un blog
+  .filter(post => post.slug !== 'hello-world') // Excluir la sección bienvenida
+  .filter(post => post.slug !== 'primer-post') // Excluir la sección mi primer post
   .slice(0, 4); 
 ---
 
 <div id="webgl-container" class="fixed top-0 left-0 w-full h-full z-0">
-  <canvas id="webgl-canvas"></canvas>
+  <canvas id="canvas"></canvas>
 </div>
 
 <div id="scroll-container" class="relative z-10">
+  <div class="background-noise"></div>
   
-  <!-- Vista Inicial -->
-  <section id="initial-view" class="h-screen flex items-center justify-center text-center">
-    <div class="animate-float texto-principal fade-out">
-      <h1 class="text-5xl md:text-7xl font-bold text-white">PuntoZero</h1>
-      <p class="text-xl text-white animate-bounce">Desliza para empezar el viaje</p>
-    </div>
-  </section>
-
-  <!-- Mensaje de Bienvenida -->
-  <section id="welcome-card-section" class="h-screen flex items-center">
-    <div class="container mx-auto px-4">
-      <div id="welcome-card" class="bienvenido fade-behind w-full md:w-2/3 p-8 rounded-lg bg-black/30 backdrop-blur-md mx-auto text-center">
-        <h2 class="text-3xl font-bold text-white mb-4">Bienvenido</h2>
-        <p class="text-xl text-white/80">
-          Aquí te perderás para encontrarme, historia de luz y oscuridad, como debería ser, una historia que aún no termina.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Siguientes Paradas: Artículos del Blog -->
-  {featuredPosts.map((post, index) => (
-    <section class="h-screen flex items-center blog-post-section">
-      <div class="container mx-auto px-4">
-        <div class="w-full md:w-1/2 p-8 rounded-lg bg-black/30 backdrop-blur-md mx-auto text-center">
-          <h2 class="text-3xl font-bold text-white mb-4">{post.data.title}</h2>
-          <p class="text-white/80 mb-6">{post.data.description}</p>
-          <a href={`/blog/${post.slug}`} class="inline-block bg-white text-black font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors">
-            Leer más
-          </a>
+  <div id="transition-container" class="relative h-[300vh] snap-start">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+      <!-- Intro Section (fades out) -->
+      <section id="intro" class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 animated-gradient">
+        <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight mb-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">PuntoZero</h1>
+        <p class="text-lg md:text-xl font-medium tracking-wide opacity-0 animate-fade-in-up animate-fadePulse" style="animation-delay: 0.7s;">Desliza para empezar el viaje</p>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce opacity-0 animate-fade-in-up" style="animation-delay: 1.2s;" aria-label="Desliza hacia abajo">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
+      </section>
+
+      <!-- Welcome Section (fades in and out) -->
+      <section id="bienvenida" class="absolute inset-0 flex items-center justify-center text-white opacity-0 px-4 text-center">
+        <div class="max-w-2xl px-4">
+          <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-4 text-soft-shadow">Bienvenid@</h1>
+          <p class="text-lg md:text-2xl leading-relaxed max-w-2xl mx-auto text-soft-shadow">
+            Aquí tal vez te<br>
+            encuentres entre<br>
+            alguna de mis historias<br>
+            que comparto contigo:<br>
+            algo de mí, de luz<br>
+            y oscuridad,<br>
+            como debería ser,<br>
+            un camino que<br>
+            aún no termina.
+          </p>
+        </div>
+        <div id="welcome-scroll-arrow" class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce cursor-pointer" aria-label="Desliza hacia abajo">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </section>
+      
+      <!-- Station 1 (fades in) -->
+      <section id="estacion-1" class="absolute inset-0 flex items-center justify-center text-white opacity-0 px-4 text-center bg-gradient-to-b from-black to-gray-900">
+        <div class="text-center max-w-xl">
+          <h2 class="text-4xl md:text-5xl font-semibold mb-6">PuntoZero</h2>
+          <p class="text-lg md:text-xl leading-relaxed text-gray-300 max-w-xl mx-auto">
+            Este es un espacio para compartir historias reales, encuentros con lo esencial y viajes personales. 
+            PuntoZero es el inicio de un recorrido hacia lo profundo: luz y oscuridad, inicios y finales, 
+            pero sobre todo, lo que nunca termina: tu propia historia.
+          </p>
+          <p class="text-lg md:text-xl leading-relaxed text-gray-300 max-w-xl mx-auto mt-4">
+            Este es el sótano de mis recuerdos, pensamientos, miedos, sueños y tristezas, aquí hay un poco de esa oscuridad y de esa luz de la que tú también tienes. Aquí quiero compartir un poco de lo que soy. Tal vez seamos muy parecidos o muy diferentes, eso lo descubriremos entre estas líneas.
+          </p>
+        </div>
+        <div id="estacion1-scroll-arrow" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white animate-bounce cursor-pointer" aria-label="Desliza hacia abajo">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section id="card-station" class="h-screen snap-start flex flex-col items-center justify-center bg-black text-white px-4">
+    <div class="text-center text-white text-xl md:text-2xl leading-relaxed mb-8 px-4">
+      <p>Aquí puedes navegar entre lo que tengo por contarte.</p>
+      <p>Gran parte de lo que soy está aquí.</p>
+      <p>Tal cual.</p>
+    </div>
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+      <a href="/notas-diarias" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Notas diarias</div>
+      </a>
+      <a href="/gina-castillo" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Gina castillo</div>
+      </a>
+      <a href="/pasos-historias" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Pasos e historias</div>
+      </a>
+      <a href="/diario-malos" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">El diario de los malos</div>
+      </a>
+      <a href="/vicios-placeres" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Vicios y placeres</div>
+      </a>
+      <a href="/historias-diarias" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Historia diarias</div>
+      </a>
+      <a href="/neurodivergencias" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Neuro<br />divergencias</div>
+      </a>
+      <a href="/vicios-placeres-2" class="block">
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Vicios y placeres</div>
+      </a>
+    </div>
+  </section>
+
+  {featuredPosts.map((post, index) => (
+    <section class="h-screen snap-start flex items-center justify-center bg-black text-white px-4">
+      <div class="text-center max-w-2xl">
+        <h2 class="text-3xl md:text-5xl font-bold tracking-wide">{post.data.title}</h2>
+        <p class="mt-4 text-lg md:text-xl opacity-80">{post.data.description}</p>
+        <a href={`/blog/${post.slug}`} class="mt-8 inline-block bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
+          Leer más
+        </a>
       </div>
     </section>
   ))}
   
-  <!-- Parada Final -->
-  <section class="h-screen flex items-center justify-center text-center text-white">
-    <div>
-      <h2 class="text-4xl font-bold">Gracias por tu visita</h2>
-    </div>
+  <section class="h-screen snap-start flex items-center justify-center text-center text-white bg-black">
+    <h2 class="text-4xl md:text-6xl font-bold">Gracias por tu visita</h2>
   </section>
 </div>
 
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const intro = document.getElementById('intro');
+    const bienvenida = document.getElementById('bienvenida');
+    const estacion1 = document.getElementById('estacion-1');
+    const transitionContainer = document.getElementById('transition-container');
+
+    if (!intro || !bienvenida || !estacion1 || !transitionContainer) {
+      return;
+    }
+
+    const handleScrollAnimation = () => {
+      const { top, height } = transitionContainer.getBoundingClientRect();
+      const scrollableDistance = height - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, -top / scrollableDistance));
+
+      // Phase 1: Intro -> Bienvenida (progress 0.0 to 0.5)
+      const phase1Progress = Math.min(1, progress / 0.5);
+      intro.style.opacity = (1 - phase1Progress).toString();
+      intro.style.transform = `scale(${1 - phase1Progress * 0.05})`;
+
+      let bienvenidaOpacity;
+      if (progress < 0.5) {
+        bienvenidaOpacity = phase1Progress;
+        bienvenida.style.transform = `scale(${0.95 + phase1Progress * 0.05}) translateY(0px)`;
+      } else {
+        const phase2Progress = (progress - 0.5) / 0.5;
+        bienvenidaOpacity = 1 - phase2Progress;
+        const bienvenidaTranslateY = phase2Progress * -50; // Move up by 50px
+        bienvenida.style.transform = `scale(${1 - phase2Progress * 0.05}) translateY(${bienvenidaTranslateY}px)`;
+        
+        // Phase 2: Bienvenida -> Estacion-1 (progress 0.5 to 1.0)
+        estacion1.style.opacity = phase2Progress.toString();
+        estacion1.style.transform = `scale(${0.95 + phase2Progress * 0.05})`;
+      }
+      bienvenida.style.opacity = bienvenidaOpacity.toString();
+    };
+
+    handleScrollAnimation();
+    window.addEventListener('scroll', handleScrollAnimation);
+
+    // --- Scroll to next station on arrow click ---
+    const welcomeScrollArrow = document.getElementById('welcome-scroll-arrow');
+    const estacion1ScrollArrow = document.getElementById('estacion1-scroll-arrow');
+    const cardStation = document.getElementById('card-station');
+
+    if (welcomeScrollArrow && cardStation) {
+      welcomeScrollArrow.addEventListener('click', () => {
+        cardStation.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    if (estacion1ScrollArrow && cardStation) {
+      estacion1ScrollArrow.addEventListener('click', () => {
+        cardStation.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Proteger la tarjeta "Gina castillo" con contraseña básica en JavaScript
+    const ginaCard = document.querySelector('a[href="/gina-castillo"]');
+
+    if (ginaCard) {
+      ginaCard.addEventListener("click", (e) => {
+        e.preventDefault();
+        const contraseña = prompt("Digita los últimos 6 dígitos de tu cédula para poder ingresar:");
+        if (contraseña === "300537") {
+          window.location.href = ginaCard.href;
+        } else {
+          alert("Contraseña incorrecta.");
+        }
+      });
+    }
+  });
+</script>
+
 <script src="../scripts/interactive-hero.js"></script> 
+
+<style>
+  #intro {
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  #bienvenida, #estacion-1 {
+    background: linear-gradient(to bottom, #000000, #0a0a0a, #1a1a1a);
+    background-size: 100% 200%;
+    background-position: center 60%;
+  }
+
+  @keyframes grainMovement {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(1px, -1px);
+    }
+  }
+</style>
