@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -124,4 +127,69 @@
   .fade-out-active {
     @apply opacity-0;
   }
+  .fade-out.scrolled {
+    @apply opacity-0;
+  }
+  .fade-in {
+    @apply opacity-0 transition-opacity duration-1000 ease-in-out;
+  }
+  .fade-in.scrolled {
+    @apply opacity-100;
+  }
+}
+
+.background-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.06;
+  animation: grainMovement 1s infinite;
+  pointer-events: none;
+}
+
+@keyframes grainMovement {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-background {
+  background: linear-gradient(-45deg, #0a0a0a, #0f172a, #2c2c54, #4b0082);
+  background-size: 400% 400%;
+  animation: gradient-flow 15s ease infinite;
+}
+
+.text-soft-shadow {
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-fadePulse {
+  animation: fadePulse 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #0f0f0f, #1a1a1a, #2a2a2a, #000000);
+  background-size: 300% 300%;
+  animation: gradientShift 15s ease infinite;
 } 

@@ -4,23 +4,23 @@ import ThemeToggle from './ThemeToggle.astro';
 import MobileSearchOverlay from './MobileSearchOverlay.astro';
 ---
 
-<header id="main-header" class="sticky top-0 z-50 w-full bg-background/70 dark:bg-dark-background/70 backdrop-blur-md shadow-sm transition-all duration-300">
+<header id="main-header" class="sticky top-0 z-50 w-full bg-[#0a0a0a]/70 backdrop-blur-md shadow-sm transition-all duration-300">
   <div class="container mx-auto px-4">
     <div class="flex items-center justify-between h-16">
       <!-- Logo llamativo -->
       <a href="/" class="flex items-center select-none">
-        <span class="text-2xl md:text-3xl font-extrabold text-[var(--accent)] tracking-tight relative">
+        <span class="text-2xl md:text-3xl font-extrabold text-white tracking-tight relative">
           PuntoZero
-          <span class="block h-1 w-8 bg-[var(--accent-light)] dark:bg-[var(--accent-dark)] rounded-full absolute left-0 -bottom-2"></span>
+          <span class="block h-1 w-8 bg-gray-500 rounded-full absolute left-0 -bottom-2"></span>
         </span>
       </a>
 
       <!-- Navegación, Búsqueda Móvil y Tema -->
       <div class="flex items-center space-x-4">
         <!-- Botón de búsqueda solo para móviles -->
-        <button id="mobile-search-toggle" aria-label="Buscar" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+        <button id="mobile-search-toggle" aria-label="Buscar" class="md:hidden p-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
           <svg
-            class="w-6 h-6 text-gray-700 dark:text-gray-200"
+            class="w-6 h-6 text-gray-200"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -70,11 +70,11 @@ import MobileSearchOverlay from './MobileSearchOverlay.astro';
   window.addEventListener('scroll', () => {
     const header = document.querySelector('#main-header');
     if (window.scrollY > 20) {
-      header?.classList.add('bg-background/90', 'dark:bg-dark-background/90', 'shadow-md');
-      header?.classList.remove('bg-background/70', 'dark:bg-dark-background/70', 'shadow-sm');
+      header?.classList.add('bg-[#0a0a0a]/90', 'shadow-md');
+      header?.classList.remove('bg-[#0a0a0a]/70', 'shadow-sm');
     } else {
-      header?.classList.remove('bg-background/90', 'dark:bg-dark-background/90', 'shadow-md');
-      header?.classList.add('bg-background/70', 'dark:bg-dark-background/70', 'shadow-sm');
+      header?.classList.remove('bg-[#0a0a0a]/90', 'shadow-md');
+      header?.classList.add('bg-[#0a0a0a]/70', 'shadow-sm');
     }
   });
 </script> 
