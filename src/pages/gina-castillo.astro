@@ -23,7 +23,7 @@ import Layout from '../layouts/Layout.astro';
       }, msUntilMidnight);
     });
   </script>
-  <div class="relative min-h-screen bg-black text-white flex items-center justify-center px-4">
+  <div class="relative min-h-screen text-white flex items-center justify-center px-4" style="background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(30,30,30,0.7) 60%, rgba(20,20,20,0.95) 100%), url('/backgrounds/fondoblog6.jpg') center center / cover no-repeat; background-size: cover; background-position: center;">
     <a href="/gina-castillo/dias" style="text-decoration: none;">
       <div id="day-counter" style="
         position: absolute;
@@ -57,16 +57,13 @@ import Layout from '../layouts/Layout.astro';
       Cada parte de este espacio tiene vida, tiene algo que contar, como ese contador que ves de rojo, presionalo y te contará algo, igual que todo lo que observas aquí.
     </p>
     <div class="text-center max-w-2xl w-full">
-      <img src="/astro.svg" alt="Logo PuntoZero" style="display: block; margin: 0 auto 2rem auto; max-width: 160px;" />
-      <h1 class="text-4xl md:text-6xl font-bold mb-8">Gina Castillo</h1>
-      <p class="text-xl md:text-2xl mb-8 text-gray-300">Página en construcción</p>
-      <p class="text-md md:text-lg text-gray-300 italic leading-relaxed text-center mb-10 max-w-xl mx-auto">
-        Por aquí encontrarás parte de ese mundo que no conociste muy bien, de esa parte
-de lo que también soy, y por supuesto
-tú estás en él. Solo deseo que la verdad 
-nunca se rinda en mi vida, como lo dice René, y como lo dices tú.
+      <h1 class="text-3xl md:text-5xl font-bold mb-4">Gina Castillo</h1>
+      <p class="text-base md:text-xl mb-4 text-gray-300">Página en construcción</p>
+      <p class="text-sm md:text-base text-gray-300 italic leading-snug text-center mb-6 max-w-md mx-auto">
+        Por aquí encontrarás parte de ese mundo que no conociste muy bien, de esa parte de lo que también soy, y por supuesto tú estás en él.<br />
+        Solo deseo que la verdad nunca se rinda en mi vida, como lo dice René, y como lo dices tú.
       </p>
-      <a href="/#card-station" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
+      <a href="/#card-station" class="inline-block bg-white text-black font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base">
         Volver a página tarjetas
       </a>
     </div>
