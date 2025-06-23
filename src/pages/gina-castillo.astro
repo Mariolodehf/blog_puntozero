@@ -2,11 +2,69 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Gina Castillo - PuntoZero">
-  <div class="min-h-screen bg-black text-white flex items-center justify-center px-4">
-    <div class="text-center max-w-2xl">
+<Layout title="Gina Castillo - PuntoZero" fullWidth={true}>
+  <script>
+    const startDate = new Date('2025-01-01T00:00:00');
+    function updateDayCounter() {
+      const today = new Date();
+      const diffTime = today.getTime() - startDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const counter = document.getElementById("day-counter");
+      if (counter) counter.innerText = `${diffDays} días`;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      updateDayCounter();
+      // Actualiza el contador cada día a medianoche
+      const now = new Date();
+      const msUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+      setTimeout(() => {
+        updateDayCounter();
+        setInterval(updateDayCounter, 24 * 60 * 60 * 1000);
+      }, msUntilMidnight);
+    });
+  </script>
+  <div class="relative min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <a href="/gina-castillo/dias" style="text-decoration: none;">
+      <div id="day-counter" style="
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        background-color: black;
+        color: red;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 2rem;
+        border: 1px solid white;
+        display: inline-block;
+        z-index: 10;
+        cursor: pointer;
+      ">
+        Cargando...
+      </div>
+    </a>
+    <p style="
+      position: absolute;
+      top: 5.5rem;
+      left: 1.5rem;
+      color: #cccccc;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      max-width: 250px;
+      z-index: 10;
+    ">
+      Cada parte de este espacio tiene vida, tiene algo que contar, como ese contador que ves de rojo, presionalo y te contará algo, igual que todo lo que observas aquí.
+    </p>
+    <div class="text-center max-w-2xl w-full">
       <h1 class="text-4xl md:text-6xl font-bold mb-8">Gina Castillo</h1>
       <p class="text-xl md:text-2xl mb-8 text-gray-300">Página en construcción</p>
+      <p class="text-md md:text-lg text-gray-300 italic leading-relaxed text-center mb-10 max-w-xl mx-auto">
+        Por aquí encontrarás parte de ese mundo que no conociste muy bien, de esa parte
+de lo que también soy, y por supuesto
+tú estás en él. Solo deseo que la verdad 
+nunca se rinda en mi vida, como lo dice René, y como lo dices tú.
+      </p>
       <a href="/#card-station" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
         Volver a página tarjetas
       </a>

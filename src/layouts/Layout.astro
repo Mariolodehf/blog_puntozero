@@ -36,7 +36,7 @@ const { title, description, image, type, pubDate, tags, fullWidth = false } = As
 		{fullWidth ? (
 			<slot />
 		) : (
-			<main class="flex-grow container mx-auto px-4 py-8">
+			<main class="flex-grow container mx-auto px-4 py-8 pt-20 content-safe">
 				<slot />
 			</main>
 		)}
@@ -49,7 +49,17 @@ const { title, description, image, type, pubDate, tags, fullWidth = false } = As
 	</body>
 </html>
 
+<script src="../scripts/navigation-fix.js"></script>
+
 <script>
+	// Control del scroll restoration para evitar problemas al navegar hacia atrás
+	window.history.scrollRestoration = 'manual';
+	
+	// Asegurar que la página comience en la parte superior al cargar
+	window.onload = () => {
+		window.scrollTo(0, 0);
+	};
+
 	// Función para manejar el cambio de tema
 	function initTheme() {
 		// Verificar preferencia guardada

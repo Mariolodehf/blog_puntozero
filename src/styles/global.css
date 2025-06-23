@@ -28,6 +28,7 @@
 
   html {
     @apply antialiased;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -36,6 +37,67 @@
     font-size: 1.1rem;
     background-color: #d1e1f7;
     background-image: linear-gradient(to bottom, #d1e1f7 0%, #ffffff 100%);
+    /* Evitar problemas de scroll restoration */
+    scroll-behavior: auto;
+  }
+
+  /* Asegurar que el contenido principal no se superponga con elementos sticky/fixed */
+  main {
+    padding-top: 4rem; /* 64px para el header */
+  }
+
+  /* Mejorar el manejo de elementos sticky */
+  .sticky {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  /* Asegurar que las secciones tengan suficiente espacio */
+  section {
+    margin-bottom: 2rem;
+  }
+
+  /* Reset de animaciones al navegar hacia atrás */
+  .reset-animations {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Prevenir superposición de elementos con position absolute */
+  .absolute {
+    position: absolute;
+  }
+
+  /* Asegurar que las secciones del InteractiveHero no se superpongan */
+  #intro, #bienvenida, #estacion-1 {
+    pointer-events: auto;
+  }
+
+  /* Reset específico para secciones superpuestas */
+  .reset-sections {
+    opacity: 0 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Asegurar que el contenido principal tenga suficiente espacio */
+  .content-safe {
+    padding-top: 5rem; /* 80px para evitar superposición con header */
+    min-height: calc(100vh - 5rem);
+  }
+
+  /* Mejorar el manejo de z-index para evitar superposiciones */
+  .z-safe {
+    z-index: 1;
+  }
+
+  .z-overlay {
+    z-index: 10;
+  }
+
+  .z-modal {
+    z-index: 50;
   }
 
   h1 {

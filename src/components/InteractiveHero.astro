@@ -86,19 +86,19 @@ const featuredPosts = allPosts
     </div>
     <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
       <a href="/notas-diarias" class="block">
-        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Notas diarias</div>
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gamma-700 hover:scale-105 transition-transform duration-300 ease-in-out">Diaria<br />Mente</div>
       </a>
       <a href="/gina-castillo" class="block">
-        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Gina castillo</div>
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gamma-700 hover:scale-105 transition-transform duration-300 ease-in-out">Gina<br />Castillo</div>
       </a>
       <a href="/pasos-historias" class="block">
-        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Pasos e historias</div>
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gamma-700 hover:scale-105 transition-transform duration-300 ease-in-out">Pasos e historias</div>
       </a>
       <a href="/diario-malos" class="block">
         <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">El diario de los malos</div>
       </a>
       <a href="/vicios-placeres" class="block">
-        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Vicios y placeres</div>
+        <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Padre y Madre</div>
       </a>
       <a href="/historias-diarias" class="block">
         <div class="flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl shadow-md text-white text-lg md:text-xl font-semibold p-4 m-2 text-center hover:bg-gray-700 hover:scale-105 transition-transform duration-300 ease-in-out">Historia diarias</div>
@@ -137,70 +137,63 @@ const featuredPosts = allPosts
     const transitionContainer = document.getElementById('transition-container');
 
     if (!intro || !bienvenida || !estacion1 || !transitionContainer) {
+      console.error("InteractiveHero sections not found, animations disabled.");
       return;
     }
 
-    const handleScrollAnimation = () => {
-      const { top, height } = transitionContainer.getBoundingClientRect();
+    const resetInteractiveHeroState = () => {
+      intro.style.opacity = '1';
+      intro.style.pointerEvents = 'auto';
+      bienvenida.style.opacity = '0';
+      bienvenida.style.pointerEvents = 'none';
+      estacion1.style.opacity = '0';
+      estacion1.style.pointerEvents = 'none';
+    };
+
+    const handleScroll = () => {
+      const { top, bottom, height } = transitionContainer.getBoundingClientRect();
+
+      // Solo ejecutar la animación cuando el contenedor de transición está en la pantalla.
+      // Esto evita conflictos con el scroll-snap de las secciones posteriores.
+      if (bottom < 0 || top > window.innerHeight) {
+        return;
+      }
+
       const scrollableDistance = height - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -top / scrollableDistance));
 
-      // Phase 1: Intro -> Bienvenida (progress 0.0 to 0.5)
-      const phase1Progress = Math.min(1, progress / 0.5);
-      intro.style.opacity = (1 - phase1Progress).toString();
-      intro.style.transform = `scale(${1 - phase1Progress * 0.05})`;
+      // Fase 1: Intro -> Bienvenida (progreso de 0.0 a 0.5)
+      const introOpacity = Math.max(0, 1 - progress / 0.5);
+      // Fase 2: Bienvenida -> Estacion-1 (progreso de 0.5 a 1.0)
+      const estacion1Opacity = Math.max(0, (progress - 0.5) / 0.5);
+      // La sección de bienvenida es visible en ambas fases, creando un fundido de entrada y salida.
+      const bienvenidaOpacity = Math.max(0, 1 - introOpacity - estacion1Opacity);
 
-      let bienvenidaOpacity;
-      if (progress < 0.5) {
-        bienvenidaOpacity = phase1Progress;
-        bienvenida.style.transform = `scale(${0.95 + phase1Progress * 0.05}) translateY(0px)`;
-      } else {
-        const phase2Progress = (progress - 0.5) / 0.5;
-        bienvenidaOpacity = 1 - phase2Progress;
-        const bienvenidaTranslateY = phase2Progress * -50; // Move up by 50px
-        bienvenida.style.transform = `scale(${1 - phase2Progress * 0.05}) translateY(${bienvenidaTranslateY}px)`;
-        
-        // Phase 2: Bienvenida -> Estacion-1 (progress 0.5 to 1.0)
-        estacion1.style.opacity = phase2Progress.toString();
-        estacion1.style.transform = `scale(${0.95 + phase2Progress * 0.05})`;
-      }
+      intro.style.opacity = introOpacity.toString();
       bienvenida.style.opacity = bienvenidaOpacity.toString();
+      estacion1.style.opacity = estacion1Opacity.toString();
+
+      // Gestionar eventos de puntero para evitar clics en secciones invisibles.
+      intro.style.pointerEvents = introOpacity > 0.1 ? 'auto' : 'none';
+      bienvenida.style.pointerEvents = bienvenidaOpacity > 0.1 ? 'auto' : 'none';
+      estacion1.style.pointerEvents = estacion1Opacity > 0.1 ? 'auto' : 'none';
     };
+    
+    // Resetear estado al cargar la página
+    resetInteractiveHeroState();
+    window.scrollTo(0, 0);
 
-    handleScrollAnimation();
-    window.addEventListener('scroll', handleScrollAnimation);
+    // Escuchar el evento de scroll con la opción passive para mejor rendimiento.
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // --- Scroll to next station on arrow click ---
-    const welcomeScrollArrow = document.getElementById('welcome-scroll-arrow');
-    const estacion1ScrollArrow = document.getElementById('estacion1-scroll-arrow');
-    const cardStation = document.getElementById('card-station');
-
-    if (welcomeScrollArrow && cardStation) {
-      welcomeScrollArrow.addEventListener('click', () => {
-        cardStation.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-
-    if (estacion1ScrollArrow && cardStation) {
-      estacion1ScrollArrow.addEventListener('click', () => {
-        cardStation.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-
-    // Proteger la tarjeta "Gina castillo" con contraseña básica en JavaScript
-    const ginaCard = document.querySelector('a[href="/gina-castillo"]');
-
-    if (ginaCard) {
-      ginaCard.addEventListener("click", (e) => {
-        e.preventDefault();
-        const contraseña = prompt("Digita los últimos 6 dígitos de tu cédula para poder ingresar:");
-        if (contraseña === "300537") {
-          window.location.href = ginaCard.href;
-        } else {
-          alert("Contraseña incorrecta.");
-        }
-      });
-    }
+    // Usar 'pageshow' para resetear el estado al navegar hacia atrás.
+    // Es más fiable que otros métodos para la cache de los navegadores.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        resetInteractiveHeroState();
+        window.scrollTo(0, 0);
+      }
+    });
   });
 </script>
 

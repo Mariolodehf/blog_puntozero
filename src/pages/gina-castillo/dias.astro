@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Días - Gina Castillo" fullWidth={true}>
+  <script>
+    const startDate = new Date('2025-01-01T00:00:00');
+    function updateDayText() {
+      const today = new Date();
+      const diffTime = today.getTime() - startDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const daysText = document.getElementById("days-text");
+      if (daysText) daysText.innerText = `Son ${diffDays} días`;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      updateDayText();
+      // Actualiza el texto cada día a medianoche
+      const now = new Date();
+      const msUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+      setTimeout(() => {
+        updateDayText();
+        setInterval(updateDayText, 24 * 60 * 60 * 1000);
+      }, msUntilMidnight);
+    });
+  </script>
+  <div class="min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div class="max-w-2xl w-full flex flex-col items-center justify-center">
+      <h1 id="days-text" class="text-3xl md:text-5xl font-extrabold text-red-500 mb-6 text-center">Son ... días</h1>
+      <p class="text-lg md:text-2xl text-gray-200 leading-relaxed text-center mb-10 whitespace-pre-line">
+        desde tus últimos mensajes que no quise escuchar ni ver, por la Vergüenza de mi alma, no leí ni escuche lo que dices, pero mi alma lo sabe, lo siente, días sin escucharte sin verte con mis ojos, pero mirando tu cara en mí propio espejo 
+cada mañana,
+cada atardecer, 
+cada paso.
+      </p>
+      <a href="/gina-castillo" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
+        Volver al menú de historias
+      </a>
+    </div>
+  </div>
+</Layout> 
