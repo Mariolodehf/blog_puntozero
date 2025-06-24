@@ -38,10 +38,10 @@ const featuredPosts = allPosts
         <section id="bienvenida" class="block min-h-screen w-full flex flex-col items-center justify-start text-white px-4 text-center py-16 bg-gradient-to-b from-black to-gray-900">
           <div class="max-w-2xl w-full px-4">
             <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-5 text-soft-shadow">Bienvenid@</h1>
-            <p class="text-base md:text-xl leading-relaxed max-w-2xl mx-auto text-soft-shadow mb-5">
+            <p class="text-base md:text-xl leading-relaxed max-w-2xl mx-auto text-soft-shadow mb-1">
               "Puede decirse que el grito de la historia nace con nosotros y que es uno de nuestros dones más importantes. En cierto sentido somos históricos todos los [Humanos]".
             </p>
-            <p class="block text-sm md:text-base mt-1 mb-8">Thomas Carlyle (1795-1881)</p>
+            <p class="block text-sm md:text-base mt-1 mb-1">Thomas Carlyle (1795-1881)</p>
 
             <p class="text-base md:text-xl leading-relaxed max-w-2xl mx-auto text-soft-shadow mb-5">
               Cada uno de nosotros contamos con memorias profundas, e indudablemente, tienen un valor inigualable en el transitar de esta historia que tejemos en colectivo, y en este viaje llamado vida, cada individuo lleva consigo experiencias fortalecedoras, que en el compartir, edifican las bases para aquellos procesos que suelen ser complejos y densos de caminar en otredad.
@@ -55,7 +55,7 @@ const featuredPosts = allPosts
               Recuerda expandir tu esencia y tu poder creador, ¡Tu voz interior tiene mucho que leer, escuchar y contar!
             </p>
 
-            <p class="text-base md:text-xl leading-relaxed max-w-2xl mx-auto text-soft-shadow mt-4 font-semibold">
+            <p class="text-base md:text-xl leading-relaxed max-w-2xl mx-auto text-soft-shadow mt-7 font-semibold">
               Con gran emoción ¡Gracias y más gracias!
               <br><span class="block font-normal mt-2">- Gina Magali</span>
             </p>
@@ -232,6 +232,15 @@ const featuredPosts = allPosts
     background-attachment: scroll;
     background-size: cover;
     background-position: center 60%;
+  }
+
+  #bienvenida {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(30,30,30,0.7) 60%, rgba(20,20,20,0.95) 100%), url('/backgrounds/fondoblog5.jpg') center center / cover no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 60%;
+    min-height: 100vh;
+    width: 100%;
   }
 
   @keyframes grainMovement {
