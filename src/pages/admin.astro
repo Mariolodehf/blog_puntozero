@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Admin - PuntoZero" fullWidth={true}>
+  <div class="min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div class="max-w-md w-full">
+      <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8">
+        <h1 class="text-3xl font-bold text-center mb-6">🔐 Panel de Administrador</h1>
+        
+        <div class="space-y-6">
+          <div class="text-center">
+            <p class="text-gray-300 mb-4">
+              Activa tus permisos de administrador para poder eliminar contenido del sitio.
+            </p>
+            <div id="admin-status" class="text-lg font-semibold mb-4">
+              Estado: <span id="status-text" class="text-red-400">No autorizado</span>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <button 
+              id="activate-admin-btn"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              🔓 Activar como Administrador
+            </button>
+            
+            <button 
+              id="deactivate-admin-btn"
+              class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              🔒 Desactivar Administrador
+            </button>
+          </div>
+
+          <div class="text-center">
+            <a href="/" class="text-blue-400 hover:text-blue-300 transition-colors duration-200">
+              ← Volver al inicio
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { setAdminStatus, checkAdminStatus } from '../utils/auth.ts';
+
+    const statusText = document.getElementById('status-text');
+    const activateBtn = document.getElementById('activate-admin-btn');
+    const deactivateBtn = document.getElementById('deactivate-admin-btn');
+
+    function updateStatus() {
+      const isAdmin = checkAdminStatus();
+      if (statusText) {
+        statusText.textContent = isAdmin ? 'Autorizado' : 'No autorizado';
+        statusText.className = isAdmin ? 'text-green-400' : 'text-red-400';
+      }
+    }
+
+    function activateAdmin() {
+      setAdminStatus(true);
+      updateStatus();
+      alert('Permisos de administrador activados. Ahora puedes eliminar contenido.');
+    }
+
+    function deactivateAdmin() {
+      setAdminStatus(false);
+      updateStatus();
+      alert('Permisos de administrador desactivados.');
+    }
+
+    // Event listeners
+    activateBtn?.addEventListener('click', activateAdmin);
+    deactivateBtn?.addEventListener('click', deactivateAdmin);
+
+    // Actualizar estado al cargar
+    document.addEventListener('DOMContentLoaded', updateStatus);
+  </script>
+</Layout> 

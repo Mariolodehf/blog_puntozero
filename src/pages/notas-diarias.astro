@@ -2,14 +2,267 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Notas Diarias - PuntoZero">
-  <div class="min-h-screen bg-black text-white flex items-center justify-center px-4 pt-16">
-    <div class="text-center max-w-2xl">
-      <h1 class="text-4xl md:text-6xl font-bold mb-8">Notas Diarias</h1>
-      <p class="text-xl md:text-2xl mb-8 text-gray-300">Página en construcción</p>
-      <a href="/#card-station" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
-        Volver a página tarjetas
-      </a>
+<Layout title="Diaria Mente - PuntoZero" fullWidth={true}>
+  <div class="min-h-screen bg-black text-white">
+    <!-- Header -->
+    <div class="bg-gradient-to-b from-gray-900 to-black py-8 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold text-center mb-4">Diaria Mente</h1>
+        <p class="text-lg md:text-xl text-gray-300 text-center max-w-2xl mx-auto">
+          Un espacio para escribir pensamientos, ideas y momentos que merecen ser recordados.
+        </p>
+      </div>
+    </div>
+
+    <!-- Botón para mostrar formulario -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <div class="text-center mb-8">
+        <button 
+          id="show-form-btn" 
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-200 text-lg"
+        >
+          ✍️ Escribir lo que pienso
+        </button>
+      </div>
+
+      <!-- Formulario de escritura (oculto por defecto) -->
+      <div id="diario-form-container" class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 mb-8 hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Escribir nueva entrada</h2>
+          <button 
+            id="close-form-btn" 
+            class="text-gray-400 hover:text-white text-2xl transition-colors duration-200"
+            aria-label="Cerrar formulario"
+          >
+            ×
+          </button>
+        </div>
+        <form id="diario-form" class="space-y-4">
+          <div>
+            <textarea 
+              id="diario-content" 
+              name="content" 
+              rows="6" 
+              placeholder="Escribe aquí tu pensamiento, idea o momento del día..."
+              class="w-full bg-white/5 border border-white/20 rounded-lg p-4 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
+              required
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button 
+              type="button" 
+              id="cancel-form-btn"
+              class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
+            >
+              Guardar entrada
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de entradas -->
+      <div id="diario-entries" class="space-y-6">
+        <!-- Las entradas se cargarán dinámicamente aquí -->
+      </div>
+
+      <!-- Estado de carga -->
+      <div id="loading" class="text-center py-8 hidden">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        <p class="mt-2 text-gray-400">Cargando entradas...</p>
+      </div>
+
+      <!-- Estado vacío -->
+      <div id="empty-state" class="text-center py-12 hidden">
+        <div class="text-6xl mb-4">📝</div>
+        <h3 class="text-xl font-semibold mb-2">No hay entradas aún</h3>
+        <p class="text-gray-400">Escribe tu primera entrada usando el formulario de arriba.</p>
+      </div>
     </div>
   </div>
+
+  <script>
+    // Variables globales
+    let entries = [];
+    let isUserAdmin = false;
+
+    // Elementos del DOM
+    const form = document.getElementById('diario-form');
+    const contentTextarea = document.getElementById('diario-content');
+    const entriesContainer = document.getElementById('diario-entries');
+    const loadingElement = document.getElementById('loading');
+    const emptyStateElement = document.getElementById('empty-state');
+    const showFormBtn = document.getElementById('show-form-btn');
+    const formContainer = document.getElementById('diario-form-container');
+    const closeFormBtn = document.getElementById('close-form-btn');
+    const cancelFormBtn = document.getElementById('cancel-form-btn');
+
+    // Cargar entradas
+    async function loadEntries() {
+      try {
+        showLoading(true);
+        const response = await fetch('/api/diario');
+        if (response.ok) {
+          entries = await response.json();
+          renderEntries();
+        } else {
+          console.error('Error al cargar entradas');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Renderizar entradas
+    function renderEntries() {
+      if (entries.length === 0) {
+        entriesContainer.innerHTML = '';
+        showEmptyState(true);
+        return;
+      }
+
+      showEmptyState(false);
+      entriesContainer.innerHTML = entries.map(entry => `
+        <div class="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:bg-white/10 transition-colors duration-200">
+          <div class="flex justify-between items-start mb-4">
+            <div class="text-sm text-gray-400">${entry.date}</div>
+            ${isUserAdmin ? `
+              <button 
+                onclick="deleteEntry('${entry.id}')" 
+                class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors duration-200"
+              >
+                Eliminar
+              </button>
+            ` : ''}
+          </div>
+          <div class="text-lg leading-relaxed whitespace-pre-wrap">${entry.content}</div>
+        </div>
+      `).join('');
+    }
+
+    // Crear nueva entrada
+    async function createEntry(content) {
+      try {
+        const response = await fetch('/api/diario', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ content })
+        });
+
+        if (response.ok) {
+          const newEntry = await response.json();
+          entries.unshift(newEntry);
+          renderEntries();
+          contentTextarea.value = '';
+          showSuccessMessage('Entrada guardada exitosamente');
+        } else {
+          const error = await response.json();
+          showErrorMessage(error.error || 'Error al guardar la entrada');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showErrorMessage('Error al guardar la entrada');
+      }
+    }
+
+    // Eliminar entrada
+    async function deleteEntry(id) {
+      if (!confirm('¿Estás seguro de que quieres eliminar esta entrada?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/diario', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id })
+        });
+
+        if (response.ok) {
+          entries = entries.filter(entry => entry.id !== id);
+          renderEntries();
+          showSuccessMessage('Entrada eliminada exitosamente');
+        } else {
+          const error = await response.json();
+          showErrorMessage(error.error || 'Error al eliminar la entrada');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showErrorMessage('Error al eliminar la entrada');
+      }
+    }
+
+    // Funciones de utilidad
+    function showLoading(show) {
+      loadingElement.classList.toggle('hidden', !show);
+    }
+
+    function showEmptyState(show) {
+      emptyStateElement.classList.toggle('hidden', !show);
+    }
+
+    function showSuccessMessage(message) {
+      // Implementar notificación de éxito
+      console.log('Éxito:', message);
+    }
+
+    function showErrorMessage(message) {
+      // Implementar notificación de error
+      console.error('Error:', message);
+      alert(message);
+    }
+
+    // Funciones para mostrar/ocultar formulario
+    function showForm() {
+      formContainer.classList.remove('hidden');
+      showFormBtn.classList.add('hidden');
+      contentTextarea.focus();
+    }
+
+    function hideForm() {
+      formContainer.classList.add('hidden');
+      showFormBtn.classList.remove('hidden');
+      contentTextarea.value = '';
+    }
+
+    // Event listeners
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = contentTextarea.value.trim();
+      
+      if (!content) {
+        showErrorMessage('Por favor escribe algo antes de guardar');
+        return;
+      }
+
+      await createEntry(content);
+      hideForm(); // Ocultar formulario después de guardar
+    });
+
+    // Event listeners para mostrar/ocultar formulario
+    showFormBtn.addEventListener('click', showForm);
+    closeFormBtn.addEventListener('click', hideForm);
+    cancelFormBtn.addEventListener('click', hideForm);
+
+    // Cargar entradas al iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar si el usuario es administrador
+      isUserAdmin = checkAdminStatus();
+      loadEntries();
+    });
+
+    // Hacer la función deleteEntry global
+    window.deleteEntry = deleteEntry;
+  </script>
 </Layout> 
